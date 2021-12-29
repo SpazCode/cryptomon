@@ -4,6 +4,7 @@ import { ButtonGroup, Button } from "react-bootstrap";
 import "./app.css";
 import Token from "../abis/Token.json";
 import hatch from "../hatch.png";
+import Hatchery from "./features/hatchery/hatcher";
 
 class App extends Component {
   async componentDidMount() {
@@ -35,7 +36,6 @@ class App extends Component {
       const abi = Token.abi;
       const token = new web3.eth.Contract(abi, address);
       this.setState({ token });
-      console.log(token);
       const totalSupply = await token.methods.getTotalSupply().call();
       this.setState({ totalSupply });
     } else {
@@ -84,21 +84,19 @@ class App extends Component {
             <main role="main" className="col-lg-12 d-flex text-center">
               <div className="content mr-auto ml-auto">
                 <h1 className="d-4">Welcome to the Monster Farm!</h1>
-                <div className="row">
-                  <div id="menu" className="col-md-3 d-flex">
-                    <ButtonGroup vertical>
-                      <Button>Hatchery</Button>
-                      <Button>Nursery</Button>
-                      <Button>Battle Ring</Button>
-                      <Button>Item Shop</Button>
-                    </ButtonGroup>
-                  </div>
-                  <div id="screen" className="col-md-9 d-flex">
-                    {/** Hatchery */}
-                    {/** Nursery */}
-                    {/** The Ring */}
-                    {/** Item shop */}
-                  </div>
+                <div className="row justify-content-center">
+                  <ButtonGroup>
+                    <Button>Hatchery</Button>
+                    <Button>Nursery</Button>
+                    <Button>Battle Ring</Button>
+                    <Button>Item Shop</Button>
+                  </ButtonGroup>
+                </div>
+                <div id="screen" className="row justify-content-center">
+                  <Hatchery/>
+                  {/** Nursery */}
+                  {/** The Ring */}
+                  {/** Item shop */}
                 </div>
               </div>
             </main>
