@@ -104,4 +104,4 @@ dist
 .tern-port
 
 # Truffle Build Files 
-build/
+src/abis/
