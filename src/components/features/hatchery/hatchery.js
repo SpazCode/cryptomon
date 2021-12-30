@@ -3,7 +3,8 @@ import React, { Component } from "react";
 import { ButtonGroup, Button } from "react-bootstrap";
 import Blockchain from "../../libs/blockchain.js";
 import _ from "lodash";
-import Token from "../../abis/Token.json";
+import Token from "../../../abis/Token.json";
+import Monster from "../../models/monster.js";
 
 class Hatchery extends Component {
   constructor(props) {
@@ -15,7 +16,21 @@ class Hatchery extends Component {
   }
 
   hatchNewMon() {
-    this.props.token.mint().call();
+    let baby = Monster.createNewMonster("Mounster", 1);
+    console.log(baby);
+    // this.props.token
+    //   .mint(
+    //     baby.name,
+    //     baby.health,
+    //     baby.attack,
+    //     baby.skill,
+    //     baby.defense,
+    //     baby.resistence,
+    //     baby.speed,
+    //     baby.luck,
+    //     baby.rating
+    //   )
+    //   .call();
   }
 
   hatchAnimation() {

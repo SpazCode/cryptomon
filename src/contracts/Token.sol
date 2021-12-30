@@ -6,6 +6,7 @@ import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract Token is ERC721, Ownable {
     struct Monster {
+        string name;
         uint16 health;
         uint8 attack;
         uint8 skill;
@@ -28,6 +29,7 @@ contract Token is ERC721, Ownable {
     {}
 
     function mint(
+        string name,
         uint16 health,
         uint8 attack,
         uint8 skill,
@@ -39,6 +41,7 @@ contract Token is ERC721, Ownable {
     ) public onlyOwner {
         uint nextId = _getNextId();
         _tokenDetials[nextId] = Monster(
+            name,
             health,
             attack,
             skill,
