@@ -1,48 +1,13 @@
-import React, { Component } from "react";
-import Web3 from "web3";
-import { ButtonGroup, Button } from "react-bootstrap";
 import "./app.css";
+import React, { Component } from "react";
+import { ButtonGroup, Button } from "react-bootstrap";
 import Token from "../abis/Token.json";
 import hatch from "../hatch.png";
-import Hatchery from "./features/hatchery/hatcher";
+import Hatchery from "./features/hatchery/hatchery";
+import Blockchain from "./libs/blockchain";
+import _ from "lodash";
 
 class App extends Component {
-  async componentDidMount() {
-    await this.loadWeb3();
-    await this.loadBlockchainData();
-  }
-
-  async loadWeb3() {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-    } else if (window.web3) {
-      window.web3 = new Web3(window.Web3.currentProvider);
-    } else {
-      window.alert("Non-Ethereum browser detected");
-    }
-  }
-
-  async loadBlockchainData() {
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    this.setState({ account: accounts[0] });
-
-    // Load the contract
-    const networkId = await web3.eth.net.getId();
-    const networkData = Token.networks[networkId];
-    if (networkData) {
-      const address = networkData.address;
-      const abi = Token.abi;
-      const token = new web3.eth.Contract(abi, address);
-      this.setState({ token });
-      const totalSupply = await token.methods.getTotalSupply().call();
-      this.setState({ totalSupply });
-    } else {
-      window.alert("The Contract is not deployed to the network.");
-    }
-  }
-
   constructor(props) {
     super(props);
     this.state = {
@@ -50,6 +15,22 @@ class App extends Component {
       token: {},
       totalSupply: null,
     };
+  }
+
+  async componentDidMount() {
+    await Blockchain.loadWeb3();
+    await this.loadBlockchainData();
+  }
+
+  async loadBlockchainData() {
+    const accounts = await Blockchain.getCurrentAccounts();
+    this.setState({ account: accounts[0] });
+    const token = await Blockchain.loadContract(Token);
+    if (!_.isNull(token)) {
+      this.setState({ token });
+      const totalSupply = await token.methods.getTotalSupply().call();
+      this.setState({ totalSupply });
+    }
   }
 
   render() {
@@ -93,7 +74,7 @@ class App extends Component {
                   </ButtonGroup>
                 </div>
                 <div id="screen" className="row justify-content-center">
-                  <Hatchery/>
+                  <Hatchery token={this.state.token} />
                   {/** Nursery */}
                   {/** The Ring */}
                   {/** Item shop */}
